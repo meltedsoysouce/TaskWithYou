@@ -1,0 +1,45 @@
+﻿
+<BSModal @ref="BsModal" Size="Size.Medium">
+    <Header>タスクの削除</Header>
+    <Content>
+        @if (CanRender == true)
+        {
+            <BSForm Model="viewModel" OnValidSubmit="OnValidSubmitAsync">
+                <table class="table table-bordered">
+                    <tr>
+                        <th class="w-25">タスク名</th>
+                        <td>
+                            @viewModel.Name
+                            <p class="small align-text-bottom">@viewModel.StateItem.Name</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>登録日</th>
+                        <td>@viewModel.TourokuBi</td>
+                    </tr>
+                    <tr>
+                        <th>期限日</th>
+                        <td>@viewModel.KigenBi</td>
+                    </tr>
+                    <tr>
+                        <th>詳細</th>
+                        <td>@viewModel.Detail</td>
+                    </tr>
+                </table>
+
+                <div class="row mt-3 mx-auto">
+                    <div class="col-3 mr-2">
+                        <button type="button" class="btn btn-outline-secondary"
+                                @onclick="@(() => BsModal.HideAsync())">
+                            Cancel
+                        </button>
+                    </div>
+
+                    <div class="col-3 ml-2">
+                        <button type="submit" class="btn btn-outline-danger">Delete</button>
+                    </div>
+                </div>
+            </BSForm>
+        }
+    </Content>
+</BSModal>

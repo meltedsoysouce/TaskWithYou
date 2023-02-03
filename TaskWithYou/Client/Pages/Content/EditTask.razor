@@ -1,0 +1,66 @@
+﻿@using TaskWithYou.Shared.Model;
+
+<BSModal @ref="BsModal" Size="Size.Large">
+    <Header>タスクの作成</Header>
+    <Content>
+        @if (CanRender == true)
+        {
+            <BSForm Model="viewModel" OnValidSubmit="OnValidSubmitAsync">
+                <DataAnnotationsValidator />
+                <div class="mx-2">
+                    <div class="row mx-2">
+                        <div class="col-4">
+                            <label class="form-label">作業状況</label>
+                            <BSInput InputType="InputType.Select" Value="viewModel.SelectedState"
+                                     ValueExpression="@(() => viewModel.SelectedState)"
+                                     @onchange="@(e => OnChangeSelectedItem(e))">
+                                @foreach (var item in viewModel.StateItems)
+                                {
+                                    <option value="@(item.State)">@item.Name</option>
+                                }
+                            </BSInput>
+                            <ValidationMessage For="@(() => viewModel.SelectedState)" />
+                        </div>
+                        <div class="col">
+                            <label class="form-label">タスクの名前</label>
+                            <input type="text" class="form-control" @bind-value="viewModel.Name" />
+                            <ValidationMessage For="@(() => viewModel.Name)" />
+                        </div>
+                    </div>
+
+                    <div class="row mt-2">
+                        <div class="col">
+                            <label class="form-label mb-0">登録日</label>
+                            <input type="date" class="form-control mx-2 col-10" value="@viewModel.StrTourokuBi" />
+                            <ValidationMessage For="@(() => viewModel.StrTourokuBi)" />
+                        </div>
+                        <div class="col">
+                            <label class="form-label mb-0">期限日</label>
+                            <input type="date" class="form-control" value="@viewModel.StrKigenBi" />
+                            <ValidationMessage For="@(() => viewModel.StrKigenBi)" />
+                        </div>
+                    </div>
+
+                    <div class="">
+                        <label>詳細</label>
+                        <textarea @bind="viewModel.Detail" />
+                        <ValidationMessage For="@(() => viewModel.Detail)" />
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-3 mr-2">
+                            <button type="button" class="btn btn-outline-secondary"
+                                    @onclick="@(() => BsModal.HideAsync())">
+                                Cancel
+                            </button>
+                        </div>
+                        <div class="col-3 ml-2">
+                            <button type="submit" class="btn btn-outline-success">Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </BSForm>
+        }
+    </Content>
+</BSModal>
+

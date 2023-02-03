@@ -1,0 +1,15 @@
+﻿.before-doing {
+    color: #fc4444;
+}
+
+.doing {
+    color: #00947a;
+}
+
+.finished {
+    color: #4444fc;
+}
+
+.blight-point {
+    filter: blur(2px)
+}
