@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Components;
 using System.Net.Http.Json;
 using TaskWithYou.Shared.Model;
 
-namespace TaskWithYou.Client.Pages.Content
+namespace TaskWithYou.Client.Pages.Content.Tasks
 {
-    public partial class DeleteTask
+    public partial class _DeleteTask
     {
         // ViewModel
         private ViewModel viewModel { get; set; }

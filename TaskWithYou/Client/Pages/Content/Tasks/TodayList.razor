@@ -1,10 +1,11 @@
-﻿@page "/Content/TaskList"
+﻿@page "/Content/Tasks/TodayList";
+
+<h3>Today ToDo</h3>
+
 @using TaskWithYou.Shared;
 
-<TaskWithYou.Client.Pages.Content.EditTask @ref="EditModal" OnClose="OnRefleshList" />
-<TaskWithYou.Client.Pages.Content.DeleteTask @ref="DeleteModal" OnClose="OnRefleshList" />
-
-<h3>TaskList</h3>
+<TaskWithYou.Client.Pages.Content.Tasks._EditTask @ref="EditModal" OnClose="OnRefleshAsync" />
+<TaskWithYou.Client.Pages.Content.Tasks._DeleteTask @ref="DeleteModal" OnClose="OnRefleshAsync" />
 
 @if (CanRender == true)
 {
@@ -20,12 +21,12 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var task in viewModel.TaskItems)
+            @foreach (var task in TodayTasks)
             {
                 <tr>
                     <td class="text-center @GetColorClass(task.State.State)">
                         <p class="m-0 blight-point">●</p>
-                        @task.State.Name
+                        @task.State.StateName
                     </td>
                     <td>@task.Name</td>
                     <td>@task.TourokuBi</td>
@@ -33,7 +34,9 @@
                     <td class="text-break">@task.Detail</td>
                     <td>
                         <button type="button" class="btn btn-outline-info"
-                                @onclick="@(() => EditModal.OnOpenAsync(task.Gid, EditMode.Edit))">Edit</button>
+                                @onclick="@(() => EditModal.OnOpenAsync(task.Gid, EditMode.Edit))">
+                            Edit
+                        </button>
 
                         <button type="button" class="btn btn-outline-danger"
                                 @onclick="@(() => DeleteModal.OnOpenAsync(task.Gid))">
@@ -41,12 +44,12 @@
                         </button>
                     </td>
                 </tr>
-                }
+            }
         </tbody>
     </table>
 
-        <button type="button" class="btn btn-outline-info"
-                @onclick="@(() => EditModal.OnOpenAsync(Guid.Empty, EditMode.Add))">
-            Add
-        </button>
-    }
+    <button type="button" class="btn btn-outline-info"
+            @onclick="@(() => EditModal.OnOpenAsync(Guid.Empty, EditMode.Add))">
+        Add
+    </button>
+}

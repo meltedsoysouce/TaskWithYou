@@ -1,0 +1,55 @@
+﻿@page "/Content/TaskPool"
+@using TaskWithYou.Shared;
+
+<TaskWithYou.Client.Pages.Content.Tasks._EditTask @ref="EditModal" OnClose="OnRefleshList" />
+<TaskWithYou.Client.Pages.Content.Tasks._DeleteTask @ref="DeleteModal" OnClose="OnRefleshList" />
+
+<div class="row">
+    <h3 class="col-auto">TaskPool</h3>
+    <a href="/Content/Tasks/TodayList" class="btn btn-outline-info col-3">TodayList</a>
+</div>
+
+@if (CanRender == true)
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th></th>
+                <th>タスク名</th>
+                <th>登録日</th>
+                <th>期限日</th>
+                <th>詳細</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var task in viewModel.TaskItems)
+            {
+                <tr>
+                    <td class="text-center @GetColorClass(task.State.State)">
+                        <p class="m-0 blight-point">●</p>
+                        @task.State.Name
+                    </td>
+                    <td>@task.Name</td>
+                    <td>@task.TourokuBi</td>
+                    <td>@task.KigenBi</td>
+                    <td class="text-break">@task.Detail</td>
+                    <td>
+                        <button type="button" class="btn btn-outline-info"
+                                @onclick="@(() => EditModal.OnOpenAsync(task.Gid, EditMode.Edit))">Edit</button>
+
+                        <button type="button" class="btn btn-outline-danger"
+                                @onclick="@(() => DeleteModal.OnOpenAsync(task.Gid))">
+                            Del
+                        </button>
+                    </td>
+                </tr>
+                }
+        </tbody>
+    </table>
+
+        <button type="button" class="btn btn-outline-info"
+                @onclick="@(() => EditModal.OnOpenAsync(Guid.Empty, EditMode.Add))">
+            Add
+        </button>
+    }

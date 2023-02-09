@@ -87,6 +87,40 @@ namespace TaskWithYou.Server.Controllers
             return ticket;
         }
 
+        //[Route("api/[controller]/todaylist")]
+        [HttpGet("today")]
+        public async Task<ActionResult<TaskTicket[]>> GetTodayList()
+        {
+            return _TaskTicketRepository
+                .GetAll()
+                .Join(_TaskStateRepository.GetAll(),
+                    task => task.TaskState,
+                    state => state.Gid,
+                    (task, state) => new { task, state })
+                .Select(a =>
+                {
+                    TaskTicket ticket = new()
+                    {
+                        Gid = a.task.Gid,
+                        Name = a.task.Name,
+                        TourokuBi = a.task.TourokuBi,
+                        KigenBi = a.task.KigenBi,
+                        Detail = a.task.Detail,
+                    };
+
+                    TaskState state = new()
+                    {
+                        Gid = a.state.Gid,
+                        StateName = a.state.StateName,
+                        State = a.state.State
+                    };
+
+                    ticket.State = state;
+                    return ticket;
+                })
+                .ToArray();
+        }
+
         [HttpPost]
         public bool AddTask(TaskTicket pTask)
         {
@@ -121,4 +155,54 @@ namespace TaskWithYou.Server.Controllers
             await _TaskTicketRepository.Delete(pGid);
         }
     }
+
+    //[Route("api/taskticket/todaylist")]
+    //[ApiController]
+    //public class TodayListController : ControllerBase
+    //{
+    //    private readonly ITaskTicketRepository _TaskTicketRepository;
+    //    private readonly ITaskStateRepository _TaskStateRepository;
+
+    //    public TodayListController(
+    //        ITaskTicketRepository taskTicketRepository,
+    //        ITaskStateRepository taskStateRepository)
+    //    {
+    //        _TaskTicketRepository = taskTicketRepository;
+    //        _TaskStateRepository = taskStateRepository;
+    //    }
+
+    //    [HttpGet]
+    //    public async Task<ActionResult<TaskTicket[]>> GetAll()
+    //    {
+    //        return _TaskTicketRepository
+    //            .GetAll()
+    //            .Where(a => a.IsTodayTask == true)
+    //            .Join(_TaskStateRepository.GetAll(),
+    //                task => task.TaskState,
+    //                state => state.Gid,
+    //                (task, state) => new { task, state })
+    //            .Select(a =>
+    //            {
+    //                TaskTicket ticket = new()
+    //                {
+    //                    Gid = a.task.Gid,
+    //                    Name = a.task.Name,
+    //                    TourokuBi = a.task.TourokuBi,
+    //                    KigenBi = a.task.KigenBi,
+    //                    Detail = a.task.Detail,
+    //                };
+
+    //                TaskState state = new()
+    //                {
+    //                    Gid = a.state.Gid,
+    //                    StateName = a.state.StateName,
+    //                    State = a.state.State
+    //                };
+
+    //                ticket.State = state;
+    //                return ticket;
+    //            })
+    //            .ToArray();
+    //    }
+    //}
 }

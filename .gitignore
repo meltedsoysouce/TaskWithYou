@@ -364,3 +364,4 @@ FodyWeavers.xsd
 
 DBKernel/appsettings.json
 TaskWithYou/Server/appsettings.json
+TaskWithYou/Server/appsettings.Development.json

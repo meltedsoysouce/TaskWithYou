@@ -5,9 +5,9 @@ using TaskWithYou.Shared.Model;
 using BlazorStrap.V5;
 using TaskWithYou.Shared;
 
-namespace TaskWithYou.Client.Pages.Content
+namespace TaskWithYou.Client.Pages.Content.Tasks
 {
-    public partial class EditTask
+    public partial class _EditTask
     {
         // HttoClient
         [Inject]

@@ -28,6 +28,7 @@ namespace DBKernel
                 a.Property(b => b.KigenBi);
                 a.Property(b => b.Detail);
                 a.Property(b => b.TaskState).IsRequired();
+                a.Property(b => b.IsTodayTask).IsRequired();
             });
 
             modelBuilder.Entity<TaskState>(a =>

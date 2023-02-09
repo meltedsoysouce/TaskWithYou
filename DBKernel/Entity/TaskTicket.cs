@@ -14,5 +14,7 @@
 
         // This is a foreignkey to connect TaskState
         public Guid TaskState { get; set; }
+
+        public bool IsTodayTask { get; set; }
     }
 }

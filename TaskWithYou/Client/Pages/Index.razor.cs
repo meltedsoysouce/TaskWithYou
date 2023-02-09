@@ -11,7 +11,7 @@ namespace TaskWithYou.Client.Pages
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            NavigationManager.NavigateTo("/Content/TaskList");
+            NavigationManager.NavigateTo("/Content/TaskPool");
         }
     }
 }

@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Components;
 using System.Net.Http.Json;
 using TaskWithYou.Shared.Model;
+using TaskWithYou.Client.Pages.Content.Tasks;
 
 namespace TaskWithYou.Client.Pages.Content
 {
-    public partial class TaskList
+    public partial class TaskPool
     {
         private ViewModel viewModel { get; set; } = new();
 
@@ -16,8 +17,8 @@ namespace TaskWithYou.Client.Pages.Content
         }
 
         // modals this page have
-        private EditTask EditModal { get; set; } = new();
-        private DeleteTask DeleteModal { get; set; } = new();
+        private _EditTask EditModal { get; set; } = new();
+        private _DeleteTask DeleteModal { get; set; } = new();
 
         protected override async Task OnInitializedAsync()
         {
@@ -39,6 +40,7 @@ namespace TaskWithYou.Client.Pages.Content
         /// <returns>なし</returns>
         private async Task OnRefleshList()
         {
+            //var entitis = await Http.GetFromJsonAsync<TaskTicket[]>("api/taskticket");
             var entitis = await Http.GetFromJsonAsync<TaskTicket[]>("api/taskticket");
             viewModel.TaskItems = entitis.Select(a =>
             {
