@@ -41,6 +41,7 @@ namespace TaskWithYou.Server.Controllers
                         TourokuBi = a.task.TourokuBi,
                         KigenBi = a.task.KigenBi,
                         Detail = a.task.Detail,
+                        IsTodayTask = a.task.IsTodayTask,
                     };
 
                     TaskState state = new()
@@ -71,7 +72,8 @@ namespace TaskWithYou.Server.Controllers
                 Name = task.Name,
                 TourokuBi = task.TourokuBi,
                 KigenBi = task.KigenBi,
-                Detail = task.Detail
+                Detail = task.Detail,
+                IsTodayTask = task.IsTodayTask,
             };
 
             var _state = _TaskStateRepository
@@ -93,10 +95,11 @@ namespace TaskWithYou.Server.Controllers
         {
             return _TaskTicketRepository
                 .GetAll()
+                .Where(a => a.IsTodayTask == true)
                 .Join(_TaskStateRepository.GetAll(),
                     task => task.TaskState,
                     state => state.Gid,
-                    (task, state) => new { task, state })
+                    (task, state) => new { task, state })                
                 .Select(a =>
                 {
                     TaskTicket ticket = new()
@@ -106,6 +109,7 @@ namespace TaskWithYou.Server.Controllers
                         TourokuBi = a.task.TourokuBi,
                         KigenBi = a.task.KigenBi,
                         Detail = a.task.Detail,
+                        IsTodayTask = a.task.IsTodayTask,
                     };
 
                     TaskState state = new()
@@ -130,6 +134,7 @@ namespace TaskWithYou.Server.Controllers
                 pTask.Name,
                 pTask.KigenBi,
                 pTask.Detail,
+                pTask.IsTodayTask,
                 pTask.State.Gid);
 
             return true;
@@ -144,6 +149,7 @@ namespace TaskWithYou.Server.Controllers
                 pTask.Name,
                 pTask.KigenBi,
                 pTask.Detail,
+                pTask.IsTodayTask,
                 pTask.State.Gid);
 
             //return true;

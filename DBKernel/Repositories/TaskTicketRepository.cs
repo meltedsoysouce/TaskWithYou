@@ -11,6 +11,7 @@ namespace DBKernel.Repositories
                 string pName,
                 int pKigenBi,
                 string pDetail,
+                bool pIsTodayTask,
                 Guid pTaskStateGid);
 
         Task Edit(Guid pGid,
@@ -18,6 +19,7 @@ namespace DBKernel.Repositories
                 string pName,
                 int pKigenBi,
                 string pDetail,
+                bool pIsTodayTask,
                 Guid pTaskStateGid);
 
         Task Delete(Guid pGid);
@@ -53,6 +55,7 @@ namespace DBKernel.Repositories
                 string pName,
                 int pKigenBi,
                 string pDetail,
+                bool pIsTodayTask, 
                 Guid pTaskStateGid)
         {
             var task = _DbContext.TaskTickets.First(a => a.Gid == pGid);
@@ -62,6 +65,7 @@ namespace DBKernel.Repositories
             task.KigenBi = pKigenBi;
             task.Detail = pDetail;
             task.TaskState = pTaskStateGid;
+            task.IsTodayTask = pIsTodayTask;
             
             await _DbContext.SaveChangesAsync();
         }
@@ -71,6 +75,7 @@ namespace DBKernel.Repositories
                 string pName,
                 int pKigenBi,
                 string pDetail,
+                bool pIsTodayTask,
                 Guid pTaskStateGid)
         {
             TaskTicket entity = new()
@@ -80,7 +85,8 @@ namespace DBKernel.Repositories
                 Name = pName,
                 KigenBi = pKigenBi,
                 Detail = pDetail,
-                TaskState = pTaskStateGid
+                TaskState = pTaskStateGid,
+                IsTodayTask = pIsTodayTask,
             };
 
             _DbContext.Add(entity);

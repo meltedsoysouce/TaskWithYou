@@ -2,19 +2,21 @@
 using System.Net.Http.Json;
 using TaskWithYou.Shared.Model;
 using TaskWithYou.Client.Pages.Content.Tasks;
+using System.Net.Sockets;
 
 namespace TaskWithYou.Client.Pages.Content
 {
     public partial class TaskPool
     {
-        private ViewModel viewModel { get; set; } = new();
-
         [Inject]
         private HttpClient Http { get; set; }
 
-        private bool CanRender {
-            get => viewModel != null && viewModel.TaskItems != null && viewModel.TaskItems.Count() != 0; 
+        private bool CanRender
+        {
+            get => TaskTickets != null && TaskTickets.Count() > 0;
         }
+
+        private bool IsUpdate { get; set; } = false;
 
         // modals this page have
         private _EditTask EditModal { get; set; } = new();
@@ -42,29 +44,7 @@ namespace TaskWithYou.Client.Pages.Content
         {
             //var entitis = await Http.GetFromJsonAsync<TaskTicket[]>("api/taskticket");
             var entitis = await Http.GetFromJsonAsync<TaskTicket[]>("api/taskticket");
-            viewModel.TaskItems = entitis.Select(a =>
-            {
-                ViewModel.TaskItem item = new()
-                {
-                    Gid = a.Gid,
-                    TourokuBi = a.TourokuBi,
-                    Name = a.Name,
-                    KigenBi = a.KigenBi,
-                    Detail = a.Detail
-                };
-
-                ViewModel.ListStateItem state = new()
-                {
-                    Gid = a.State.Gid,
-                    Name = a.State.StateName,
-                    State = a.State.State
-                };
-
-                item.State = state;
-
-                return item;
-            })
-            .ToArray();
+            TaskTickets = entitis;
 
             StateHasChanged();
         }
@@ -89,36 +69,13 @@ namespace TaskWithYou.Client.Pages.Content
             }
         }
 
-        /// <summary>
-        /// ViewModelクラス
-        /// </summary>
-        private class ViewModel
+        private async Task OnChangeTodayTask(TaskTicket pTask)
         {
-            public TaskItem[] TaskItems { get; set; } = Array.Empty<TaskItem>();
-
-            internal class TaskItem
-            {
-                public Guid Gid { get; set; }
-
-                public int TourokuBi { get; set; }
-
-                public string Name { get; set; }
-
-                public int KigenBi { get; set; }
-
-                public string Detail { get; set; }
-
-                public ListStateItem State { get; set; }
-            }
-
-            internal class ListStateItem
-            {
-                public Guid Gid { get; set; }
-
-                public string Name { get; set; }
-
-                public State State { get; set; }
-            }
+            pTask.IsTodayTask = !pTask.IsTodayTask;
+            var ticket = 
+            await Http.PutAsJsonAsync("api/taskticket", pTask);
         }
+
+        private TaskTicket[] TaskTickets { get; set; }
     }
 }

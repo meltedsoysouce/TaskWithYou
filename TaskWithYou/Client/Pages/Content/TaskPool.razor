@@ -14,6 +14,7 @@
     <table class="table table-bordered">
         <thead>
             <tr>
+                <th>今日のTodo</th>
                 <th></th>
                 <th>タスク名</th>
                 <th>登録日</th>
@@ -23,12 +24,22 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var task in viewModel.TaskItems)
+            @foreach (var task in TaskTickets)
             {
                 <tr>
+                    <td>
+                        @if (task.IsTodayTask == true)
+                        {
+                            <input type="checkbox" class="form-check" checked @bind-value="task.IsTodayTask" @onclick="@(() => OnChangeTodayTask(task))" />
+                        }
+                        else
+                        {
+                            <input type="checkbox" class="form-check" @bind-value="task.IsTodayTask" @onclick="@(() => OnChangeTodayTask(task))" />
+                        }
+                    </td>
                     <td class="text-center @GetColorClass(task.State.State)">
                         <p class="m-0 blight-point">●</p>
-                        @task.State.Name
+                        @task.State.StateName
                     </td>
                     <td>@task.Name</td>
                     <td>@task.TourokuBi</td>
@@ -36,7 +47,9 @@
                     <td class="text-break">@task.Detail</td>
                     <td>
                         <button type="button" class="btn btn-outline-info"
-                                @onclick="@(() => EditModal.OnOpenAsync(task.Gid, EditMode.Edit))">Edit</button>
+                                @onclick="@(() => EditModal.OnOpenAsync(task.Gid, EditMode.Edit))">
+                            Edit
+                        </button>
 
                         <button type="button" class="btn btn-outline-danger"
                                 @onclick="@(() => DeleteModal.OnOpenAsync(task.Gid))">
@@ -44,7 +57,7 @@
                         </button>
                     </td>
                 </tr>
-                }
+            }
         </tbody>
     </table>
 

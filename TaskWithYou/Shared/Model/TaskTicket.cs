@@ -10,6 +10,8 @@ namespace TaskWithYou.Shared.Model
     {
         public Guid Gid { get; set; }
 
+        public bool IsTodayTask { get; set; }
+
         public int TourokuBi { get; set; }
 
         public string Name { get; set; }
