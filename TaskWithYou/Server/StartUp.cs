@@ -1,5 +1,5 @@
 ﻿using DBKernel;
-using DBKernel.Entity;
+using DataBase = DBKernel.Entity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Sqlite;
 using Microsoft.Extensions.Configuration;
@@ -34,14 +34,23 @@ namespace TaskWithYou.Server
                     };
 
                     _DbContext.TaskStates.AddRange(initials);
+                    _DbContext.SaveChanges();
 
-                    _DbContext.Database.ExecuteSql($"DELETE FROM TaskStates");
-                    var gid = Guid.NewGuid();
-                    _DbContext.Database.ExecuteSql($"INSERT INTO TaskStates (Gid, StateName) VALUES ('{gid}', '未着手')");
-                    gid = Guid.NewGuid();
-                    _DbContext.Database.ExecuteSql($"INSERT INTO TaskStates (Gid, StateName) VALUES ('{gid}', '実行中')");
-                    gid = Guid.NewGuid();
-                    _DbContext.Database.ExecuteSql($"INSERT INTO TaskStates (Gid, StateName) VALUES ('{gid}', '完了')");
+                    //_DbContext.Database.ExecuteSql($"DELETE FROM TaskStates");
+                    //var gid = Guid.NewGuid();
+                    //_DbContext.Database.ExecuteSql($"INSERT INTO TaskStates (Gid, StateName) VALUES ('{gid}', '未着手')");
+                    //gid = Guid.NewGuid();
+                    //_DbContext.Database.ExecuteSql($"INSERT INTO TaskStates (Gid, StateName) VALUES ('{gid}', '実行中')");
+                    //gid = Guid.NewGuid();
+                    //_DbContext.Database.ExecuteSql($"INSERT INTO TaskStates (Gid, StateName) VALUES ('{gid}', '完了')");
+                }
+
+                var clusters = _DbContext.Clusters.AsNoTracking().FirstOrDefault();
+                if (clusters == null)
+                {
+                    DataBase.Cluster cluster = new() { Gid = Guid.NewGuid(), Name = "test", Detail = "Initrialize" };
+                    _DbContext.Clusters.Add(cluster);
+                    _DbContext.SaveChanges();
                 }
             }
         }

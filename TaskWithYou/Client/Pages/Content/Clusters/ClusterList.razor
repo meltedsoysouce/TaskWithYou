@@ -1,0 +1,24 @@
+﻿@page "/Content/Clusters/List"
+
+<h3>ClusterList</h3>
+
+@if (CanRender == true)
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>名前</th>
+                <th>詳細</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in ListItems)
+                {
+                    <tr>
+                        <td>@item.Name</td>
+                        <td>@item.Detail</td>
+                    </tr>
+                }
+        </tbody>
+    </table>
+}

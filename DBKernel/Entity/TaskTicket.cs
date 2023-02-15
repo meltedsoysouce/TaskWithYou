@@ -16,5 +16,7 @@
         public Guid TaskState { get; set; }
 
         public bool IsTodayTask { get; set; }
+
+        public Guid Cluster { get; set; }
     }
 }

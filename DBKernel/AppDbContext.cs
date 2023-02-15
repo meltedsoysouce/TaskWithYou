@@ -10,6 +10,7 @@ namespace DBKernel
 
         public DbSet<TaskTicket> TaskTickets { get; set; }
         public DbSet<TaskState> TaskStates { get; set; }
+        public DbSet<Cluster> Clusters { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) 
         { 
@@ -29,6 +30,7 @@ namespace DBKernel
                 a.Property(b => b.Detail);
                 a.Property(b => b.TaskState).IsRequired();
                 a.Property(b => b.IsTodayTask).IsRequired();
+                a.Property(b => b.Cluster);
             });
 
             modelBuilder.Entity<TaskState>(a =>
@@ -36,6 +38,13 @@ namespace DBKernel
                 a.HasKey(b => b.Gid);               
                 a.Property(b => b.StateName).IsRequired();
                 a.Property(b => b.State).IsRequired();
+            });
+
+            modelBuilder.Entity<Cluster>(a =>
+            {
+                a.HasKey(b => b.Gid);
+                a.Property(b => b.Name).IsRequired();
+                a.Property(b => b.Detail);
             });
         }
 

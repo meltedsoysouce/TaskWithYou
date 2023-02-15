@@ -18,9 +18,10 @@ builder.Services.AddDbContext<DBKernel.AppDbContext>(options =>
 // Repository
 builder.Services.AddScoped<ITaskTicketRepository, TaskTicketRepository>();
 builder.Services.AddScoped<ITaskStateRepository, TaskStateRepository>();
+builder.Services.AddScoped<IClusterRepository, ClusterRepository>();
 
 // SetupDb
-//StartUp.SetupDB();
+StartUp.SetupDB();
 
 var app = builder.Build();
 
