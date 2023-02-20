@@ -16,7 +16,10 @@
                 <InputTextArea class="form-control" @bind-Value="EditModel.Detail" />
 
                 <div class="row justify-content-center mt-3">
-                    <button type="submit" class="btn btn-success col-3">Submit</button>
+                    <button type="button" class="btn btn-outline-secondary col-3 mr-3"
+                            @onclick="@(() => BsModal.HideAsync())" />
+
+                    <button type="submit" class="btn btn-success col-3 ml-3">Submit</button>
                 </div>
             </BSForm>
 

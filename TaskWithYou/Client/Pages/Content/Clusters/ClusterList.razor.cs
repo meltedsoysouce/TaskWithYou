@@ -14,7 +14,9 @@ namespace TaskWithYou.Client.Pages.Content.Clusters
             get => ListItems != null && ListItems.Count() > 0; 
         }
 
+        // modals
         private _EditCluster EditModal { get; set; } = new();
+        private _DeleteCluster DeleteModal { get; set; } = new();
 
         protected override async Task OnInitializedAsync()
         {

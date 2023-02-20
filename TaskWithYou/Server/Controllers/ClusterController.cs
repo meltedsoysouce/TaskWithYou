@@ -63,7 +63,7 @@ namespace TaskWithYou.Server.Controllers
                 pCluster.Detail);
         }
 
-        [HttpDelete]
+        [HttpDelete("{pGid}")]
         public async Task Delete(Guid pGid)
         {
             _ClusterRepository.Delete(pGid);

@@ -1,6 +1,7 @@
 ﻿@page "/Content/Clusters/List"
 
 <TaskWithYou.Client.Pages.Content.Clusters._EditCluster @ref="EditModal" OnClose="OnReflesh"/>
+<TaskWithYou.Client.Pages.Content.Clusters._DeleteCluster @ref="DeleteModal" OnClose="OnReflesh" />
 
 <h3>ClusterList</h3>
 
@@ -25,6 +26,11 @@
                                     @onclick="@(() => EditModal.OpenEditAsync(item.Gid))">
                                 Edit
                             </button>
+
+                            <button type="button" class="btn btn-outline-danger"
+                                    @onclick="@(() => DeleteModal.OnShowAsync(item.Gid))">
+                                Del
+                            </button>
                         </td>
                     </tr>
                 }
@@ -33,5 +39,6 @@
 }
 
 <div class="row justify-content-end">
-    <button class="btn btn-primary" @onclick="@(() => EditModal.OpenAddAsync())">Add</button>
+    <button type="button" class="btn btn-primary col-3" @onclick="@(() => EditModal.OpenAddAsync())">Add</button>
+    <a href="/Content/TaskPool" class="btn btn-outline-secondary col-3 ml-3">Return</a>
 </div>

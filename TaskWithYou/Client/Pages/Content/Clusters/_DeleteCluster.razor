@@ -1,0 +1,32 @@
+﻿<BSModal @ref="BsModal">
+    <Header>クラスタの削除</Header>
+    <Content>
+        @if (CanRender)
+        {
+            <BSForm Model="Model" OnValidSubmit="OnValidSubmitAsync">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <table>
+                    <tr>
+                        <th class="w-25">Name</th>
+                        <td>@Model.Name</td>
+                    </tr>
+                    <tr>
+                        <th>Detail</th>
+                        <td>@Model.Detail</td>
+                    </tr>
+                </table>
+
+                <div class="row justify-content-center mt-3">
+                    <button type="button" class="btn btn-outline-secondary col-3 mr-3"
+                            @onclick="@(() => BsModal.HideAsync())">Cancel</button>
+
+                    <button type="submit" class="btn btn-outline-success col-3 ml-3">
+                        Submit
+                    </button>
+                </div>
+            </BSForm>
+        }
+    </Content>
+</BSModal>
