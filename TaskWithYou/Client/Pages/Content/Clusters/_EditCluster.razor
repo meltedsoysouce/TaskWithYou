@@ -1,0 +1,25 @@
+﻿<BSModal @ref="BsModal" Size="Size.Large">
+    <Header>クラスタの編集</Header>
+    <Content>
+        @if (CanRender == true)
+        {
+            <BSForm Model="EditModel" OnValidSubmit="OnValidSubmitAsync">
+                <DataAnnotationsValidator />
+                <div class="row">
+                    <label class="form-label col-auto">Name</label>
+                    <input type="text" class="form-control col" @bind-value="EditModel.Name" />
+                    <ValidationMessage For="@(() => EditModel.Name)" />
+                </div>
+
+                <label class="form-label">Detail</label>
+                <ValidationMessage For="@(() => EditModel.Detail)" />
+                <InputTextArea class="form-control" @bind-Value="EditModel.Detail" />
+
+                <div class="row justify-content-center mt-3">
+                    <button type="submit" class="btn btn-success col-3">Submit</button>
+                </div>
+            </BSForm>
+
+        }
+    </Content>
+</BSModal>

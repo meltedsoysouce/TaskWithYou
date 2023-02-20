@@ -1,7 +1,7 @@
 ﻿using DBKernel.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using FrontEnd = TaskWithYou.Shared.Model;
+using ClientSide = TaskWithYou.Shared.Model;
 
 namespace TaskWithYou.Server.Controllers
 {
@@ -17,13 +17,13 @@ namespace TaskWithYou.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<FrontEnd.Cluster[]>> GetAll()
+        public async Task<ActionResult<ClientSide.Cluster[]>> GetAll()
         {
             return _ClusterRepository
                 .GetAll()
                 .Select(a =>
                 {
-                    return new FrontEnd.Cluster()
+                    return new ClientSide.Cluster()
                     {
                         Gid = a.Gid,
                         Name = a.Name,
@@ -33,16 +33,34 @@ namespace TaskWithYou.Server.Controllers
                 .ToArray();
         }
 
-        [HttpPost]
-        public async Task Add(string pName, string pDetail)
+        [HttpGet("{pGid}")]
+        public async Task<ActionResult<ClientSide.Cluster>> GetCluster(Guid pGid)
         {
-            _ClusterRepository.Add(pName, pDetail);
+            var entity = _ClusterRepository.GetByGid(pGid);
+
+            if (entity == null)
+                return NotFound();
+
+            return new ClientSide.Cluster()
+            {
+                Gid = entity.Gid,
+                Name = entity.Name,
+                Detail = entity.Detail
+            };
+        }
+
+        [HttpPost]
+        public async Task Add(ClientSide.Cluster pCluster)
+        {
+            _ClusterRepository.Add(pCluster.Name, pCluster.Detail);
         }
 
         [HttpPut]
-        public async Task Edit(Guid pGid, string pName, string pDetail)
+        public async Task Edit(ClientSide.Cluster pCluster)
         {
-            _ClusterRepository.Edit(pGid, pName, pDetail);
+            _ClusterRepository.Edit(pCluster.Gid,
+                pCluster.Name,
+                pCluster.Detail);
         }
 
         [HttpDelete]

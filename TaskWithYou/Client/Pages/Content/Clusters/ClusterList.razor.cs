@@ -14,10 +14,17 @@ namespace TaskWithYou.Client.Pages.Content.Clusters
             get => ListItems != null && ListItems.Count() > 0; 
         }
 
+        private _EditCluster EditModal { get; set; } = new();
+
         protected override async Task OnInitializedAsync()
         {
-            ListItems = await _Http.GetFromJsonAsync<Cluster[]>("api/cluster");
+            await OnReflesh();
             StateHasChanged();
+        }
+
+        private async Task OnReflesh()
+        {
+            ListItems = await _Http.GetFromJsonAsync<Cluster[]>("api/cluster");
         }
 
         private Cluster[] ListItems { get; set; }
