@@ -4,7 +4,6 @@ using TaskWithYou.Shared.Model;
 using DBKernel;
 using System.Security.AccessControl;
 using DBKernel.Repositories;
-//using TaskWithYou.Shared.Content;
 using Microsoft.AspNetCore.Components.Forms;
 
 namespace TaskWithYou.Server.Controllers
@@ -15,12 +14,15 @@ namespace TaskWithYou.Server.Controllers
     {
         private readonly ITaskTicketRepository _TaskTicketRepository;
         private readonly ITaskStateRepository _TaskStateRepository;
+        private readonly IClusterRepository _ClusterRepository;
 
         public TaskTicketController(ITaskTicketRepository taskRepository,
-            ITaskStateRepository taskStateRepository)
+            ITaskStateRepository taskStateRepository,
+            IClusterRepository clusterRepository)
         {
             _TaskTicketRepository = taskRepository;
             _TaskStateRepository = taskStateRepository;
+            _ClusterRepository = clusterRepository;
         }
 
         [HttpGet]
@@ -32,6 +34,24 @@ namespace TaskWithYou.Server.Controllers
                     task => task.TaskState,
                     state => state.Gid,
                     (task, state) => new { task, state})
+                .GroupJoin(_ClusterRepository.GetAll(),
+                    a => a.task.Cluster,
+                    b => b.Gid,
+                    (a, b) => new
+                    {
+                        a.task,
+                        a.state,
+                        b
+                    })
+                .SelectMany(a =>
+                    a.b.DefaultIfEmpty(),
+                    (a, b) => new
+                    {
+                        task = a.task,
+                        state = a.state,
+                        cluster = b
+                    })
+                .ToArray()
                 .Select(a =>
                 {
                     TaskTicket ticket = new()
@@ -50,8 +70,20 @@ namespace TaskWithYou.Server.Controllers
                         StateName = a.state.StateName,
                         State = a.state.State
                     };
-
                     ticket.State = state;
+
+                    Cluster cluster = new();
+                    if (a.cluster != null)
+                    {
+                        cluster = new()
+                        {
+                            Gid = a.cluster.Gid,
+                            Name = a.cluster.Name,
+                            Detail = a.cluster.Detail
+                        };
+                    }
+                    ticket.Cluster = cluster;
+
                     return ticket;
                 })
                 .ToArray();
@@ -84,12 +116,21 @@ namespace TaskWithYou.Server.Controllers
                 StateName = _state.StateName,
                 State = _state.State
             };
-
             ticket.State = state;
+
+            var _cluster = _ClusterRepository
+                .GetByGid(task.Cluster);
+            Cluster cluster = new()
+            {
+                Gid = _cluster.Gid,
+                Name = _cluster.Name,
+                Detail = _cluster.Detail,
+            };
+            ticket.Cluster = cluster;
+
             return ticket;
         }
 
-        //[Route("api/[controller]/todaylist")]
         [HttpGet("today")]
         public async Task<ActionResult<TaskTicket[]>> GetTodayList()
         {
@@ -99,7 +140,20 @@ namespace TaskWithYou.Server.Controllers
                 .Join(_TaskStateRepository.GetAll(),
                     task => task.TaskState,
                     state => state.Gid,
-                    (task, state) => new { task, state })                
+                    (task, state) => new { task, state })
+                .GroupJoin(_ClusterRepository.GetAll(),
+                    a => a.task.Cluster,
+                    b => b.Gid,
+                    (a, b) => new { a.task, a.state, b })
+                .SelectMany(a =>
+                    a.b.DefaultIfEmpty(),
+                    (a, b) => new
+                    {
+                        task = a.task,
+                        state = a.state,
+                        cluster = b
+                    })
+                .ToArray()
                 .Select(a =>
                 {
                     TaskTicket ticket = new()
@@ -118,8 +172,17 @@ namespace TaskWithYou.Server.Controllers
                         StateName = a.state.StateName,
                         State = a.state.State
                     };
-
                     ticket.State = state;
+
+                    Cluster cluster = new();
+                    if (a.cluster != null)
+                    {
+                        cluster.Gid = a.cluster.Gid;
+                        cluster.Name = a.cluster.Name;
+                        cluster.Detail = a.cluster.Detail;
+                    }
+                    ticket.Cluster = cluster;
+
                     return ticket;
                 })
                 .ToArray();
@@ -161,54 +224,4 @@ namespace TaskWithYou.Server.Controllers
             await _TaskTicketRepository.Delete(pGid);
         }
     }
-
-    //[Route("api/taskticket/todaylist")]
-    //[ApiController]
-    //public class TodayListController : ControllerBase
-    //{
-    //    private readonly ITaskTicketRepository _TaskTicketRepository;
-    //    private readonly ITaskStateRepository _TaskStateRepository;
-
-    //    public TodayListController(
-    //        ITaskTicketRepository taskTicketRepository,
-    //        ITaskStateRepository taskStateRepository)
-    //    {
-    //        _TaskTicketRepository = taskTicketRepository;
-    //        _TaskStateRepository = taskStateRepository;
-    //    }
-
-    //    [HttpGet]
-    //    public async Task<ActionResult<TaskTicket[]>> GetAll()
-    //    {
-    //        return _TaskTicketRepository
-    //            .GetAll()
-    //            .Where(a => a.IsTodayTask == true)
-    //            .Join(_TaskStateRepository.GetAll(),
-    //                task => task.TaskState,
-    //                state => state.Gid,
-    //                (task, state) => new { task, state })
-    //            .Select(a =>
-    //            {
-    //                TaskTicket ticket = new()
-    //                {
-    //                    Gid = a.task.Gid,
-    //                    Name = a.task.Name,
-    //                    TourokuBi = a.task.TourokuBi,
-    //                    KigenBi = a.task.KigenBi,
-    //                    Detail = a.task.Detail,
-    //                };
-
-    //                TaskState state = new()
-    //                {
-    //                    Gid = a.state.Gid,
-    //                    StateName = a.state.StateName,
-    //                    State = a.state.State
-    //                };
-
-    //                ticket.State = state;
-    //                return ticket;
-    //            })
-    //            .ToArray();
-    //    }
-    //}
 }

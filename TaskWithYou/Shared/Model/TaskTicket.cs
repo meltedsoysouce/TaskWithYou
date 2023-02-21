@@ -21,6 +21,8 @@ namespace TaskWithYou.Shared.Model
         public string Detail { get; set; }
 
         public TaskState State { get; set; } = new();
+
+        public Cluster Cluster { get; set; } = new();
     }
 
     public class TaskState
