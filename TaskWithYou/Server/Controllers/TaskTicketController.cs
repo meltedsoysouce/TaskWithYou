@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TaskWithYou.Shared.Model;
+using ServerSide = DBKernel;
 using DBKernel;
 using System.Security.AccessControl;
 using DBKernel.Repositories;
@@ -120,12 +121,16 @@ namespace TaskWithYou.Server.Controllers
 
             var _cluster = _ClusterRepository
                 .GetByGid(task.Cluster);
-            Cluster cluster = new()
+            Cluster cluster = null;
+            if (_cluster != null)
             {
-                Gid = _cluster.Gid,
-                Name = _cluster.Name,
-                Detail = _cluster.Detail,
-            };
+                cluster = new()
+                {
+                    Gid = _cluster.Gid,
+                    Name = _cluster.Name,
+                    Detail = _cluster.Detail,
+                };
+            }
             ticket.Cluster = cluster;
 
             return ticket;
@@ -198,9 +203,33 @@ namespace TaskWithYou.Server.Controllers
                 pTask.KigenBi,
                 pTask.Detail,
                 pTask.IsTodayTask,
-                pTask.State.Gid);
+                pTask.State.Gid,
+                pTask.Cluster.Gid);
 
             return true;
+        }
+
+        [HttpPost("updatetasks")]
+        public void UpdateTasks(TaskTicket[] pTaskTicktets)
+        {
+            var entites = pTaskTicktets
+                .Select(a =>
+                {
+                    return new ServerSide.Entity.TaskTicket()
+                    {
+                        Gid = a.Gid,
+                        Name = a.Name,
+                        IsTodayTask = a.IsTodayTask,
+                        TourokuBi = a.TourokuBi,
+                        KigenBi = a.KigenBi,
+                        Detail = a.Detail,
+                        TaskState = a.State.Gid,
+                        Cluster = a.Cluster.Gid
+                    };
+                })
+                .ToArray();
+
+            _TaskTicketRepository.UpdateTasks(entites);
         }
 
         [HttpPut]
@@ -213,7 +242,8 @@ namespace TaskWithYou.Server.Controllers
                 pTask.KigenBi,
                 pTask.Detail,
                 pTask.IsTodayTask,
-                pTask.State.Gid);
+                pTask.State.Gid,
+                pTask.Cluster.Gid);
 
             //return true;
         }

@@ -30,14 +30,8 @@
             {
                 <tr>
                     <td>
-                        @if (task.IsTodayTask == true)
-                        {
-                            <input type="checkbox" class="form-check" checked @bind-value="task.IsTodayTask" @onclick="@(() => OnChangeTodayTask(task))" />
-                        }
-                        else
-                        {
-                            <input type="checkbox" class="form-check" @bind-value="task.IsTodayTask" @onclick="@(() => OnChangeTodayTask(task))" />
-                        }
+                        <input type="checkbox" class="form-check" checked="@(task.IsTodayTask)"
+                               @oninput="@(() => OnChangeTodayTask(task))"/>                       
                     </td>
                     <td class="text-center @GetColorClass(task.State.State)">
                         <p class="m-0 blight-point">●</p>
@@ -52,12 +46,12 @@
                     <td class="text-break">@task.Detail</td>
                     <td>
                         <button type="button" class="btn btn-outline-info"
-                                @onclick="@(() => EditModal.OnOpenAsync(task.Gid, EditMode.Edit))">
+                                @onclick="@(() => OpenModal(() => EditModal.OnOpenAsync(task.Gid, EditMode.Edit)))">
                             Edit
                         </button>
 
                         <button type="button" class="btn btn-outline-danger"
-                                @onclick="@(() => DeleteModal.OnOpenAsync(task.Gid))">
+                                @onclick="@(() => OpenModal(() => DeleteModal.OnOpenAsync(task.Gid)))" >
                             Del
                         </button>
                     </td>
@@ -67,7 +61,7 @@
     </table>
 
         <button type="button" class="btn btn-outline-info"
-                @onclick="@(() => EditModal.OnOpenAsync(Guid.Empty, EditMode.Add))">
+                @onclick="@(() => OpenModal(() => EditModal.OnOpenAsync(Guid.Empty, EditMode.Add)))">
             Add
         </button>
     }

@@ -14,7 +14,7 @@ namespace TaskWithYou.Client.Pages.Content.Tasks
         private HttpClient Http { get; set; }
 
         // ViewModel
-        private ViewModel viewModel { get; set; }
+        private ViewModel viewModel { get; set; } = new();
 
         // We use async method to initilaize.
         // so we must block the null expception with this field.
@@ -37,8 +37,8 @@ namespace TaskWithYou.Client.Pages.Content.Tasks
         /// </summary>
         private async Task InitializeViewModelToAdd(EditMode pMode)
         {
-            viewModel = new() { Mode = EditMode.Add };
-            await InitializeStateItems();
+            //viewModel = new() { Mode = EditMode.Add };
+            viewModel.Mode = EditMode.Add;
             viewModel.SelectedState = viewModel
                 .StateItems
                 .First(a => a.State == State.BeforeDoing);
@@ -56,17 +56,27 @@ namespace TaskWithYou.Client.Pages.Content.Tasks
             }
             else
             {
-                viewModel = new()
-                {
-                    Gid = targetTask.Gid,
-                    Name = targetTask.Name,
-                    TourokuBi = targetTask.TourokuBi,
-                    StrTourokuBi = IntDateToString(targetTask.TourokuBi),
-                    KigenBi = targetTask.KigenBi,
-                    StrKigenBi = IntDateToString(targetTask.KigenBi),
-                    Detail = targetTask.Detail,
-                    Mode = EditMode.Edit
-                };
+                //viewModel = new()
+                //{
+                //    Gid = targetTask.Gid,
+                //    Name = targetTask.Name,
+                //    IsTodayTask = targetTask.IsTodayTask,
+                //    TourokuBi = targetTask.TourokuBi,
+                //    StrTourokuBi = IntDateToString(targetTask.TourokuBi),
+                //    KigenBi = targetTask.KigenBi,
+                //    StrKigenBi = IntDateToString(targetTask.KigenBi),
+                //    Detail = targetTask.Detail,
+                //    Mode = EditMode.Edit
+                //};
+                viewModel.Gid = targetTask.Gid;
+                viewModel.Name = targetTask.Name;
+                viewModel.IsTodayTask = targetTask.IsTodayTask;
+                viewModel.TourokuBi = targetTask.TourokuBi;
+                viewModel.StrTourokuBi = IntDateToString(targetTask.TourokuBi);
+                viewModel.KigenBi = targetTask.KigenBi;
+                viewModel.StrKigenBi = IntDateToString(targetTask.KigenBi);
+                viewModel.Detail = targetTask.Detail;
+                viewModel.Mode = EditMode.Edit;
 
                 viewModel.SelectedState = new()
                 {
@@ -74,8 +84,6 @@ namespace TaskWithYou.Client.Pages.Content.Tasks
                     Name = targetTask.State.StateName,
                     State = targetTask.State.State
                 };
-
-                await InitializeStateItems();
             }
         }
 
@@ -96,11 +104,19 @@ namespace TaskWithYou.Client.Pages.Content.Tasks
                 .ToArray();            
         }
 
+        private async Task InitializeClusterItems()
+        {
+            viewModel.ClusterItems = await Http.GetFromJsonAsync<Cluster[]>("api/cluster");
+        }
+
         /// <summary>
         /// open by outer page
         /// </summary>
         public async Task OnOpenAsync(Guid pGid ,EditMode pMode)
         {
+            await InitializeStateItems();
+            await InitializeClusterItems();
+
             switch (pMode)
             {
                 case EditMode.Add:
@@ -112,7 +128,8 @@ namespace TaskWithYou.Client.Pages.Content.Tasks
                 default:
                     throw new NotSupportedException($"EditModeエラー：このモードは存在しません {pMode}");
             }
-            await BsModal.ShowAsync();
+
+            var _ = BsModal.ShowAsync();
         }
 
         private void OnChangeSelectedItem(ChangeEventArgs pArg)
@@ -122,6 +139,14 @@ namespace TaskWithYou.Client.Pages.Content.Tasks
             viewModel.SelectedState = viewModel
                 .StateItems
                 .First(a => a.State == state);
+        }
+
+        private void OnChangeCluster(ChangeEventArgs pArg)
+        {
+            var gid = Guid.Parse(pArg.Value.ToString());
+            viewModel.SelectedCluster = viewModel
+                .ClusterItems
+                .First(a => a.Gid == gid);
         }
 
         /// <summary>
@@ -188,6 +213,8 @@ namespace TaskWithYou.Client.Pages.Content.Tasks
             // Mode of this page
             public EditMode Mode { get; set; }
 
+            public bool IsTodayTask { get; set; }
+
             public int TourokuBi { get; set; }
 
             [Required]
@@ -207,7 +234,10 @@ namespace TaskWithYou.Client.Pages.Content.Tasks
 
             public StateItem SelectedState { get; set; } = new();
 
-            public StateItem[] StateItems { get; set; }            
+            public StateItem[] StateItems { get; set; }
+
+            public Cluster SelectedCluster { get; set; } = new();
+            public Cluster[] ClusterItems { get; set; }
 
             internal class StateItem
             {
@@ -220,6 +250,7 @@ namespace TaskWithYou.Client.Pages.Content.Tasks
 
             internal ViewModel() 
             {
+                IsTodayTask = false;
                 Name = "";
                 var today = DateTime.Today.ToString("yyyy-MM-dd");
                 var int_today = int.Parse(today.Replace("-", ""));

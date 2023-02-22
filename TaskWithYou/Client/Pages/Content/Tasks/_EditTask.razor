@@ -41,6 +41,28 @@
                         </div>
                     </div>
 
+                    <div class="row mt-2">
+                        <div class="col">
+                            <label class="form-check-label mb-0">
+                                今日のTodo?                                 
+                                <input type="checkbox" class="form-check-inline" 
+                                       checked="@(viewModel.IsTodayTask)"
+                                       @oninput="@(() => viewModel.IsTodayTask = !viewModel.IsTodayTask)"/>
+                            </label>
+                        </div>
+                        <div class="col">
+                            <label class="form-label mb-0">クラスタ</label>
+                            <BSInput InputType="InputType.Select" Value="viewModel.SelectedCluster"
+                                     ValueExpression="@(() => viewModel.SelectedCluster)"
+                                     @onchange="@(e => OnChangeCluster(e))">
+                                @foreach (var item in viewModel.ClusterItems)
+                                {
+                                    <option value="@item.Gid">@item.Name</option>
+                                }
+                            </BSInput>
+                        </div>
+                    </div>
+
                     <div class="">
                         <label>詳細</label>
                         <textarea @bind="viewModel.Detail" />

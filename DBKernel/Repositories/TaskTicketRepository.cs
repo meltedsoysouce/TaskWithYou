@@ -12,7 +12,8 @@ namespace DBKernel.Repositories
                 int pKigenBi,
                 string pDetail,
                 bool pIsTodayTask,
-                Guid pTaskStateGid);
+                Guid pTaskStateGid,
+                Guid pCluster);
 
         Task Edit(Guid pGid,
                 int pTourokuBi,
@@ -20,7 +21,10 @@ namespace DBKernel.Repositories
                 int pKigenBi,
                 string pDetail,
                 bool pIsTodayTask,
-                Guid pTaskStateGid);
+                Guid pTaskStateGid,
+                Guid pCluster);
+
+        void UpdateTasks(TaskTicket[] pTasks);
 
         Task Delete(Guid pGid);
     }
@@ -55,8 +59,9 @@ namespace DBKernel.Repositories
                 string pName,
                 int pKigenBi,
                 string pDetail,
-                bool pIsTodayTask, 
-                Guid pTaskStateGid)
+                bool pIsTodayTask,
+                Guid pTaskStateGid,
+                Guid pCluster)
         {
             var task = _DbContext.TaskTickets.First(a => a.Gid == pGid);
 
@@ -66,8 +71,15 @@ namespace DBKernel.Repositories
             task.Detail = pDetail;
             task.TaskState = pTaskStateGid;
             task.IsTodayTask = pIsTodayTask;
+            task.Cluster = pCluster;
             
             await _DbContext.SaveChangesAsync();
+        }
+
+        public void UpdateTasks(TaskTicket[] pTasks)
+        {
+            _DbContext.AddRange(pTasks);
+            _DbContext.SaveChanges();
         }
 
         public async Task Add(Guid pGid,
@@ -76,7 +88,8 @@ namespace DBKernel.Repositories
                 int pKigenBi,
                 string pDetail,
                 bool pIsTodayTask,
-                Guid pTaskStateGid)
+                Guid pTaskStateGid,
+                Guid pCluster)
         {
             TaskTicket entity = new()
             {
@@ -87,6 +100,7 @@ namespace DBKernel.Repositories
                 Detail = pDetail,
                 TaskState = pTaskStateGid,
                 IsTodayTask = pIsTodayTask,
+                Cluster = pCluster
             };
 
             _DbContext.Add(entity);

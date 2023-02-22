@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 using TaskWithYou.Shared.Model;
 using TaskWithYou.Client.Pages.Content.Tasks;
 using System.Net.Sockets;
+using System.Reflection.Metadata.Ecma335;
 
 namespace TaskWithYou.Client.Pages.Content
 {
@@ -15,12 +16,29 @@ namespace TaskWithYou.Client.Pages.Content
         {
             get => TaskTickets != null && TaskTickets.Count() > 0;
         }
-
+        
         private bool IsUpdate { get; set; } = false;
 
         // modals this page have
         private _EditTask EditModal { get; set; } = new();
         private _DeleteTask DeleteModal { get; set; } = new();
+
+        private async void OpenModal(Action pModalOpenAction)
+        {
+            if (UpdateList.Count > 0)              
+               await UpdateTodayTask();
+            
+
+            pModalOpenAction.Invoke();
+        }
+
+        private async void OpenModal(Func<Task> pModalOpenFunc)
+        {
+            if (UpdateList.Count() > 0)
+                await UpdateTodayTask();
+
+            await Task.Run(pModalOpenFunc);
+        }
 
         protected override async Task OnInitializedAsync()
         {
@@ -45,6 +63,7 @@ namespace TaskWithYou.Client.Pages.Content
             //var entitis = await Http.GetFromJsonAsync<TaskTicket[]>("api/taskticket");
             var entitis = await Http.GetFromJsonAsync<TaskTicket[]>("api/taskticket");
             TaskTickets = entitis;
+            UpdateList.Clear();
 
             StateHasChanged();
         }
@@ -72,9 +91,18 @@ namespace TaskWithYou.Client.Pages.Content
         private async Task OnChangeTodayTask(TaskTicket pTask)
         {
             pTask.IsTodayTask = !pTask.IsTodayTask;
-            var ticket = 
-            await Http.PutAsJsonAsync("api/taskticket", pTask);
+            //var ticket = 
+            //await Http.PutAsJsonAsync("api/taskticket", pTask);
+            UpdateList.Add(pTask);
         }
+
+        private async Task UpdateTodayTask()
+        {
+            await Http.PostAsJsonAsync("api/taskticket/updatetasks", UpdateList.ToArray());
+        }
+
+        // to update today task?
+        private List<TaskTicket> UpdateList { get; set; } = new();
 
         private TaskTicket[] TaskTickets { get; set; }
     }
