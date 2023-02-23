@@ -6,8 +6,14 @@
 
 <div class="row">
     <h3 class="col-auto">TaskPool</h3>
-    <a href="/Content/Tasks/TodayList" class="btn btn-outline-info col-3">TodayList</a>
-    <a href="/Content/Clusters/List" class="btn btn-primary col-3">ClusterList</a>
+    @*<a href="/Content/Tasks/TodayList" class="btn btn-outline-info col-3">TodayList</a>*@
+    <button type="button" class="btn btn-outline-info col-3"
+            @onclick="@(() => JumpToOtherPage("/Content/Tasks/TodayList"))">TodayList</button>
+    @*<a href="/Content/Clusters/List" class="btn btn-primary col-3">ClusterList</a>*@
+    <button type="button" class="btn btn-outline-primary col-3"
+            @onclick="@(() => JumpToOtherPage("/Content/Clusters/List"))">
+        ClusterList
+    </button>
 </div>
 
 @if (CanRender == true)

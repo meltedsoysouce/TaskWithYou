@@ -78,7 +78,14 @@ namespace DBKernel.Repositories
 
         public void UpdateTasks(TaskTicket[] pTasks)
         {
-            _DbContext.AddRange(pTasks);
+            var entities = pTasks
+                .Select(a =>
+                {
+                    return _DbContext
+                        .TaskTickets
+                        .First(b => b.Gid == a.Gid);
+                });
+            _DbContext.UpdateRange(entities);
             _DbContext.SaveChanges();
         }
 

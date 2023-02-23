@@ -12,6 +12,9 @@ namespace TaskWithYou.Client.Pages.Content
         [Inject]
         private HttpClient Http { get; set; }
 
+        [Inject]
+        private NavigationManager NavigationManager { get; set; }
+
         private bool CanRender
         {
             get => TaskTickets != null && TaskTickets.Count() > 0;
@@ -23,21 +26,20 @@ namespace TaskWithYou.Client.Pages.Content
         private _EditTask EditModal { get; set; } = new();
         private _DeleteTask DeleteModal { get; set; } = new();
 
-        private async void OpenModal(Action pModalOpenAction)
-        {
-            if (UpdateList.Count > 0)              
-               await UpdateTodayTask();
-            
-
-            pModalOpenAction.Invoke();
-        }
-
         private async void OpenModal(Func<Task> pModalOpenFunc)
         {
             if (UpdateList.Count() > 0)
                 await UpdateTodayTask();
 
-            await Task.Run(pModalOpenFunc);
+            Task.Run(pModalOpenFunc);
+        }
+
+        private async void JumpToOtherPage(string pURL)
+        {
+            if (UpdateList.Count() > 0)
+                await UpdateTodayTask();
+
+            NavigationManager.NavigateTo(pURL);
         }
 
         protected override async Task OnInitializedAsync()
@@ -60,7 +62,6 @@ namespace TaskWithYou.Client.Pages.Content
         /// <returns>なし</returns>
         private async Task OnRefleshList()
         {
-            //var entitis = await Http.GetFromJsonAsync<TaskTicket[]>("api/taskticket");
             var entitis = await Http.GetFromJsonAsync<TaskTicket[]>("api/taskticket");
             TaskTickets = entitis;
             UpdateList.Clear();

@@ -172,6 +172,14 @@ namespace TaskWithYou.Client.Pages.Content.Tasks
             };
             ticket.State = state;
 
+            var cluster = new Cluster()
+            {
+                Gid = viewModel.SelectedCluster.Gid,
+                Name = viewModel.SelectedCluster.Name,
+                Detail = viewModel.SelectedCluster.Detail,
+            };
+            ticket.Cluster = cluster;
+
             switch (viewModel.Mode)
             {
                 case EditMode.Add:
