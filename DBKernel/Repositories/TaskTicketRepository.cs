@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using DBKernel.Entity;
+using System.Text;
 
 namespace DBKernel.Repositories
 {
@@ -81,10 +82,21 @@ namespace DBKernel.Repositories
             var entities = pTasks
                 .Select(a =>
                 {
-                    return _DbContext
+                    var entity = _DbContext
                         .TaskTickets
                         .First(b => b.Gid == a.Gid);
-                });
+
+                    entity.Name = a.Name;
+                    entity.TourokuBi = a.TourokuBi;
+                    entity.KigenBi = a.KigenBi;
+                    entity.Detail = a.Detail;
+                    entity.TaskState = a.TaskState;
+                    entity.IsTodayTask = a.IsTodayTask;
+                    entity.Cluster = a.Cluster;
+
+                    return entity;
+                })
+                .ToArray();
             _DbContext.UpdateRange(entities);
             _DbContext.SaveChanges();
         }
