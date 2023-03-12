@@ -6,12 +6,13 @@ using DBKernel;
 using System.Security.AccessControl;
 using DBKernel.Repositories;
 using Microsoft.AspNetCore.Components.Forms;
+using TaskWithYou.Server.Utilities;
 
 namespace TaskWithYou.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TaskTicketController : ControllerBase
+    public partial class TaskTicketController : ControllerBase
     {
         private readonly ITaskTicketRepository _TaskTicketRepository;
         private readonly ITaskStateRepository _TaskStateRepository;
@@ -137,7 +138,7 @@ namespace TaskWithYou.Server.Controllers
         }
 
         [HttpGet("today")]
-        public async Task<ActionResult<TaskTicket[]>> GetTodayList()
+        public ActionResult<TaskTicket[]> GetTodayList()
         {
             return _TaskTicketRepository
                 .GetAll()
@@ -161,34 +162,38 @@ namespace TaskWithYou.Server.Controllers
                 .ToArray()
                 .Select(a =>
                 {
-                    TaskTicket ticket = new()
-                    {
-                        Gid = a.task.Gid,
-                        Name = a.task.Name,
-                        TourokuBi = a.task.TourokuBi,
-                        KigenBi = a.task.KigenBi,
-                        Detail = a.task.Detail,
-                        IsTodayTask = a.task.IsTodayTask,
-                    };
+                    //TaskTicket ticket = new()
+                    //{
+                    //    Gid = a.task.Gid,
+                    //    Name = a.task.Name,
+                    //    TourokuBi = a.task.TourokuBi,
+                    //    KigenBi = a.task.KigenBi,
+                    //    Detail = a.task.Detail,
+                    //    IsTodayTask = a.task.IsTodayTask,
+                    //};
 
-                    TaskState state = new()
-                    {
-                        Gid = a.state.Gid,
-                        StateName = a.state.StateName,
-                        State = a.state.State
-                    };
-                    ticket.State = state;
+                    //TaskState state = new()
+                    //{
+                    //    Gid = a.state.Gid,
+                    //    StateName = a.state.StateName,
+                    //    State = a.state.State
+                    //};
+                    //ticket.State = state;
 
-                    Cluster cluster = new();
-                    if (a.cluster != null)
-                    {
-                        cluster.Gid = a.cluster.Gid;
-                        cluster.Name = a.cluster.Name;
-                        cluster.Detail = a.cluster.Detail;
-                    }
-                    ticket.Cluster = cluster;
+                    //Cluster cluster = new();
+                    //if (a.cluster != null)
+                    //{
+                    //    cluster.Gid = a.cluster.Gid;
+                    //    cluster.Name = a.cluster.Name;
+                    //    cluster.Detail = a.cluster.Detail;
+                    //}
+                    //ticket.Cluster = cluster;
 
-                    return ticket;
+                    //return ticket;
+                    //return TaskTicketUtilities.ServerSideToClientSide(a.task,
+                    //    a.state,
+                    //    a.cluster);
+                    return ConvertToClientSide(a.task, a.state, a.cluster);
                 })
                 .ToArray();
         }

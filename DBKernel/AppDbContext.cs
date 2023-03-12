@@ -11,6 +11,7 @@ namespace DBKernel
         public DbSet<TaskTicket> TaskTickets { get; set; }
         public DbSet<TaskState> TaskStates { get; set; }
         public DbSet<Cluster> Clusters { get; set; }
+        public DbSet<TicketCard> TicketCards { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) 
         { 
@@ -31,6 +32,7 @@ namespace DBKernel
                 a.Property(b => b.TaskState).IsRequired();
                 a.Property(b => b.IsTodayTask).IsRequired();
                 a.Property(b => b.Cluster);
+                a.Property(b => b.Card).IsRequired();
             });
 
             modelBuilder.Entity<TaskState>(a =>
@@ -45,6 +47,14 @@ namespace DBKernel
                 a.HasKey(b => b.Gid);
                 a.Property(b => b.Name).IsRequired();
                 a.Property(b => b.Detail);
+            });
+
+            modelBuilder.Entity<TicketCard>(a =>
+            {
+                a.HasKey(b => b.Gid);
+                a.Property(b => b.XCoordinate).IsRequired();
+                a.Property(b => b.YCorrdinate).IsRequired();
+                a.Property(b => b.TaskTicket).IsRequired();
             });
         }
 
