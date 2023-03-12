@@ -9,8 +9,8 @@ namespace TaskWithYou.Server.Controllers
     {
         public static ClientSide.TaskTicket ConvertToClientSide(
             ServerSide.TaskTicket pvTicket,
-            ServerSide.TaskState pvState=null,
-            ServerSide.Cluster pvCluster=null)
+            ServerSide.TaskState pvState,
+            ServerSide.Cluster pvCluster)
         {
             ClientSide.TaskTicket ticket = new()
             {

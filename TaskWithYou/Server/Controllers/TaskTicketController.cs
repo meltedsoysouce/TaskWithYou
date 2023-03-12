@@ -56,37 +56,7 @@ namespace TaskWithYou.Server.Controllers
                 .ToArray()
                 .Select(a =>
                 {
-                    TaskTicket ticket = new()
-                    {
-                        Gid = a.task.Gid,
-                        Name = a.task.Name,
-                        TourokuBi = a.task.TourokuBi,
-                        KigenBi = a.task.KigenBi,
-                        Detail = a.task.Detail,
-                        IsTodayTask = a.task.IsTodayTask,
-                    };
-
-                    TaskState state = new()
-                    {
-                        Gid = a.state.Gid,
-                        StateName = a.state.StateName,
-                        State = a.state.State
-                    };
-                    ticket.State = state;
-
-                    Cluster cluster = new();
-                    if (a.cluster != null)
-                    {
-                        cluster = new()
-                        {
-                            Gid = a.cluster.Gid,
-                            Name = a.cluster.Name,
-                            Detail = a.cluster.Detail
-                        };
-                    }
-                    ticket.Cluster = cluster;
-
-                    return ticket;
+                    return ConvertToClientSide(a.task, a.state, a.cluster);
                 })
                 .ToArray();
         }
@@ -162,37 +132,6 @@ namespace TaskWithYou.Server.Controllers
                 .ToArray()
                 .Select(a =>
                 {
-                    //TaskTicket ticket = new()
-                    //{
-                    //    Gid = a.task.Gid,
-                    //    Name = a.task.Name,
-                    //    TourokuBi = a.task.TourokuBi,
-                    //    KigenBi = a.task.KigenBi,
-                    //    Detail = a.task.Detail,
-                    //    IsTodayTask = a.task.IsTodayTask,
-                    //};
-
-                    //TaskState state = new()
-                    //{
-                    //    Gid = a.state.Gid,
-                    //    StateName = a.state.StateName,
-                    //    State = a.state.State
-                    //};
-                    //ticket.State = state;
-
-                    //Cluster cluster = new();
-                    //if (a.cluster != null)
-                    //{
-                    //    cluster.Gid = a.cluster.Gid;
-                    //    cluster.Name = a.cluster.Name;
-                    //    cluster.Detail = a.cluster.Detail;
-                    //}
-                    //ticket.Cluster = cluster;
-
-                    //return ticket;
-                    //return TaskTicketUtilities.ServerSideToClientSide(a.task,
-                    //    a.state,
-                    //    a.cluster);
                     return ConvertToClientSide(a.task, a.state, a.cluster);
                 })
                 .ToArray();
