@@ -12,6 +12,10 @@
             @onclick="@(() => JumpToOtherPage("/Content/Clusters/List"))">
         ClusterList
     </button>
+    <button type="button" class="btn btn-outline-primary col-2"
+            @onclick="@(() => JumpToOtherPage("/Content/CardView"))">
+        CardView
+    </button>
 </div>
 
 @if (CanRender == true)

@@ -1,4 +1,7 @@
 ﻿@using TaskWithYou.Shared.Model;
+@using TaskWithYou.Client.Shared;
+
+<CustomValidator @ref="CustomValidator" />
 
 <BSModal @ref="BsModal" Size="Size.Large">
     <Header>タスクの作成</Header>
@@ -60,6 +63,7 @@
                                     <option value="@item.Gid">@item.Name</option>
                                 }
                             </BSInput>
+                            <ValidationMessage For="@(() => viewModel.SelectedCluster)" />
                         </div>
                     </div>
 

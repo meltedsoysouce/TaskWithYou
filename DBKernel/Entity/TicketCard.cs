@@ -6,7 +6,7 @@
 
         public float XCoordinate { get; set; }
 
-        public float YCorrdinate { get; set; }
+        public float YCoordinate { get; set; }
 
         public Guid TaskTicket { get; set; }
     }

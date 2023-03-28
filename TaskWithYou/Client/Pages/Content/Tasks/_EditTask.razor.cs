@@ -4,6 +4,7 @@ using System.Net.Http.Json;
 using TaskWithYou.Shared.Model;
 using BlazorStrap.V5;
 using TaskWithYou.Shared;
+using TaskWithYou.Client.Shared;
 
 namespace TaskWithYou.Client.Pages.Content.Tasks
 {
@@ -26,6 +27,9 @@ namespace TaskWithYou.Client.Pages.Content.Tasks
         // EventCallBack
         [Parameter]
         public EventCallback OnClose { get; set; }
+
+        // CustomValidator
+        private CustomValidator CustomValidator { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
@@ -155,42 +159,58 @@ namespace TaskWithYou.Client.Pages.Content.Tasks
         /// <returns></returns>
         private async Task OnValidSubmitAsync()
         {
-            var ticket = new TaskTicket()
-            {
-                Gid = viewModel.Gid,
-                Name = viewModel.Name,
-                TourokuBi = viewModel.TourokuBi,
-                KigenBi = viewModel.KigenBi,
-                Detail = viewModel.Detail,
-            };
+            // Intialize CustomValidator
+            CustomValidator.ClearErrors();
 
-            var state = new TaskState()
+            var isCheckOk = InputCheck(out var errors);
+            if (isCheckOk is true)
             {
-                Gid = viewModel.SelectedState.Gid,
-                StateName = viewModel.SelectedState.Name,
-                State = viewModel.SelectedState.State
-            };
-            ticket.State = state;
+                var ticket = new TaskTicket()
+                {
+                    Gid = viewModel.Gid,
+                    Name = viewModel.Name,
+                    TourokuBi = viewModel.TourokuBi,
+                    KigenBi = viewModel.KigenBi,
+                    Detail = viewModel.Detail,
+                };
 
-            var cluster = new Cluster()
-            {
-                Gid = viewModel.SelectedCluster.Gid,
-                Name = viewModel.SelectedCluster.Name,
-                Detail = viewModel.SelectedCluster.Detail,
-            };
-            ticket.Cluster = cluster;
+                var state = new TaskState()
+                {
+                    Gid = viewModel.SelectedState.Gid,
+                    StateName = viewModel.SelectedState.Name,
+                    State = viewModel.SelectedState.State
+                };
+                ticket.State = state;
 
-            switch (viewModel.Mode)
-            {
-                case EditMode.Add:
-                    await Http.PostAsJsonAsync("api/taskticket", ticket);
-                    break;
-                case EditMode.Edit:
-                    await Http.PutAsJsonAsync("api/taskticket", ticket);
-                    break;
-                default:
-                    throw new NotSupportedException($"EditModeエラー：このモードは存在しません {viewModel.Mode}");
+                Cluster cluster = new();
+                if (viewModel.SelectedCluster != null)
+                {
+                    cluster = new Cluster()
+                    {
+                        Gid = viewModel.SelectedCluster.Gid,
+                        Name = viewModel.SelectedCluster.Name,
+                        Detail = viewModel.SelectedCluster.Detail,
+                    };
+                }
+                ticket.Cluster = cluster;
+
+                switch (viewModel.Mode)
+                {
+                    case EditMode.Add:
+                        await Http.PostAsJsonAsync("api/taskticket", ticket);
+                        break;
+                    case EditMode.Edit:
+                        await Http.PutAsJsonAsync("api/taskticket", ticket);
+                        break;
+                    default:
+                        throw new NotSupportedException($"EditModeエラー：このモードは存在しません {viewModel.Mode}");
+                }
             }
+            else
+            {
+                CustomValidator.DisplayError(errors);
+            }
+
             await BsModal.HideAsync();
             await OnClose.InvokeAsync();
         }
@@ -208,6 +228,18 @@ namespace TaskWithYou.Client.Pages.Content.Tasks
             var day = _strdate.Substring(6, 2);
 
             return $"{year}-{month}-{day}";
+        }
+
+        private bool InputCheck(out Dictionary<string, List<string>> errors)
+        {
+            errors = new();
+
+            if (viewModel.SelectedState is null)
+            {
+                errors.Add("SelectedState", new() { "Stateがセットされていません。選択してください。" });
+            }
+
+            return errors.Count() > 0;
         }
 
         /// <summary>

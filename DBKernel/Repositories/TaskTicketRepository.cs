@@ -122,7 +122,16 @@ namespace DBKernel.Repositories
                 Cluster = pCluster
             };
 
+            TicketCard card = new()
+            {
+                Gid = Guid.NewGuid(),
+                TaskTicket = entity.Gid,
+                XCoordinate = 0,
+                YCoordinate = 0
+            };
+
             _DbContext.Add(entity);
+            _DbContext.Add(card);
             await _DbContext.SaveChangesAsync();
         }
 

@@ -1,2 +1,12 @@
-﻿<h3>CardView</h3>
+﻿@page "/Content/CardView"
 
+<h3>CardView</h3>
+
+@if (CanRender == true)
+{
+    <p>@Cards</p>
+    @foreach (var card in Cards)
+    {
+        <TaskWithYou.Client.Pages.Content.Tasks.Card CardContent="card" />
+    }
+}

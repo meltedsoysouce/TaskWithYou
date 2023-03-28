@@ -24,6 +24,9 @@ builder.Services.AddScoped<ITicketCardRepository, TicketCardRepository>();
 // SetupDb
 StartUp.SetupDB();
 
+// Set TestData
+//StartUp.SetTestData();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

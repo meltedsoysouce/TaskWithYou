@@ -53,7 +53,7 @@ namespace DBKernel
             {
                 a.HasKey(b => b.Gid);
                 a.Property(b => b.XCoordinate).IsRequired();
-                a.Property(b => b.YCorrdinate).IsRequired();
+                a.Property(b => b.YCoordinate).IsRequired();
                 a.Property(b => b.TaskTicket).IsRequired();
             });
         }
