@@ -17,7 +17,7 @@ namespace DBKernel.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.2");
 
-            modelBuilder.Entity("DBKernel.Entity.Cluster", b =>
+            modelBuilder.Entity("TaskWithYou.Shared.Model.Cluster", b =>
                 {
                     b.Property<Guid>("Gid")
                         .ValueGeneratedOnAdd()
@@ -36,34 +36,34 @@ namespace DBKernel.Migrations
                     b.ToTable("Clusters");
                 });
 
-            modelBuilder.Entity("DBKernel.Entity.TaskState", b =>
+            modelBuilder.Entity("TaskWithYou.Shared.Model.TaskState", b =>
                 {
                     b.Property<Guid>("Gid")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("State")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("StateName")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("State")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Gid");
 
                     b.ToTable("TaskStates");
                 });
 
-            modelBuilder.Entity("DBKernel.Entity.TaskTicket", b =>
+            modelBuilder.Entity("TaskWithYou.Shared.Model.TaskTicket", b =>
                 {
                     b.Property<Guid>("Gid")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("Card")
+                    b.Property<Guid>("CardGid")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("Cluster")
+                    b.Property<Guid>("ClusterGid")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Detail")
@@ -80,7 +80,7 @@ namespace DBKernel.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("TaskState")
+                    b.Property<Guid>("StateGid")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("TourokuBi")
@@ -91,7 +91,7 @@ namespace DBKernel.Migrations
                     b.ToTable("TaskTickets");
                 });
 
-            modelBuilder.Entity("DBKernel.Entity.TicketCard", b =>
+            modelBuilder.Entity("TaskWithYou.Shared.Model.TicketCard", b =>
                 {
                     b.Property<Guid>("Gid")
                         .ValueGeneratedOnAdd()

@@ -1,5 +1,5 @@
-﻿using DBKernel.Entity;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using TaskWithYou.Shared.Model;
 
 namespace DBKernel.Repositories
 {
@@ -34,3 +34,4 @@ namespace DBKernel.Repositories
         }
     }
 }
+

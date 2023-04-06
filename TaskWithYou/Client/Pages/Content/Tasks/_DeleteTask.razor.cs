@@ -46,7 +46,7 @@ namespace TaskWithYou.Client.Pages.Content.Tasks
             viewModel.StateItem = new()
             {
                 Gid = task.State.Gid,
-                Name = task.State.StateName,
+                Name = task.State.Name,
                 State = task.State.State
             };
 

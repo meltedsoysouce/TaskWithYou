@@ -1,13 +1,13 @@
-﻿using TaskWithYou.Shared.Model;
+﻿//using TaskWithYou.Shared.Model;
 
-namespace DBKernel.Entity
-{
-    public class TaskState
-    {
-        public Guid Gid { get; set; }
+//namespace DBKernel.Entity
+//{
+//    public class TaskState
+//    {
+//        public Guid Gid { get; set; }
 
-        public string StateName { get; set; }
+//        public string StateName { get; set; }
 
-        public State State { get; set; }
-    }
-}
+//        public State State { get; set; }
+//    }
+//}

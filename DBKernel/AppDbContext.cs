@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using DBKernel.Entity;
+using TaskWithYou.Shared.Model;
 
 namespace DBKernel
 {
@@ -29,16 +29,19 @@ namespace DBKernel
                 a.Property(b => b.Name).IsRequired();
                 a.Property(b => b.KigenBi);
                 a.Property(b => b.Detail);
-                a.Property(b => b.TaskState).IsRequired();
+                a.Property(b => b.StateGid).IsRequired();
+                a.Ignore(b => b.State);
                 a.Property(b => b.IsTodayTask).IsRequired();
-                a.Property(b => b.Cluster);
-                a.Property(b => b.Card).IsRequired();
+                a.Property(b => b.ClusterGid);
+                a.Ignore(b => b.Cluster);
+                a.Property(b => b.CardGid).IsRequired();
+                a.Ignore(b => b.Card);
             });
 
             modelBuilder.Entity<TaskState>(a =>
             {
                 a.HasKey(b => b.Gid);               
-                a.Property(b => b.StateName).IsRequired();
+                a.Property(b => b.Name).IsRequired();
                 a.Property(b => b.State).IsRequired();
             });
 

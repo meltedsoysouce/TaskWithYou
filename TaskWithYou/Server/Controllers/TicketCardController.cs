@@ -28,57 +28,60 @@ namespace TaskWithYou.Server.Controllers
         [HttpGet]
         public ActionResult<TicketCard[]> GetAll()
         {
-            return _TicketCardRepository
-                .GetAll()
-                .Join(_TaskTicketRepository.GetAll(),
-                    card => card.TaskTicket,
-                    task => task.Gid,
-                    (card, task) => new { card, task })                
-                .Select(a =>
-                {
-                    TicketCard card = new TicketCard()
-                    {
-                        Gid = a.card.Gid,
-                        XCoordinate = a.card.XCoordinate,
-                        YCoordinate = a.card.YCoordinate
-                    };
+            TicketCard[] tasks = { };
+            return tasks;
+            //return _TicketCardRepository
+            //    .GetAll()
+            //    .Join(_TaskTicketRepository.GetAll(),
+            //        card => card.TaskTicket,
+            //        task => task.Gid,
+            //        (card, task) => new { card, task })                
+            //    .Select(a =>
+            //    {
+            //        TicketCard card = new TicketCard()
+            //        {
+            //            Gid = a.card.Gid,
+            //            XCoordinate = a.card.XCoordinate,
+            //            YCoordinate = a.card.YCoordinate
+            //        };
 
-                    TaskTicket ticket = new()
-                    {
-                        Gid = a.task.Gid,
-                        Name = a.task.Name,
-                        TourokuBi = a.task.TourokuBi,
-                        IsTodayTask = a.task.IsTodayTask,
-                        KigenBi = a.task.KigenBi,
-                        Detail = a.task.Detail
-                    };
+            //        TaskTicket ticket = new()
+            //        {
+            //            Gid = a.task.Gid,
+            //            Name = a.task.Name,
+            //            TourokuBi = a.task.TourokuBi,
+            //            IsTodayTask = a.task.IsTodayTask,
+            //            KigenBi = a.task.KigenBi,
+            //            Detail = a.task.Detail
+            //        };
 
-                    TaskState state = new();
-                    if (a.task.TaskState != Guid.Empty)
-                    {
-                        var _state = _TaskStateRepository.GetByGid(a.task.TaskState);
+            //        TaskState state = new();
+            //        if (a.task.TaskState != Guid.Empty)
+            //        {
+            //            var _state = _TaskStateRepository.GetByGid(a.task.TaskState);
 
-                        state.Gid = _state.Gid;
-                        state.StateName = _state.StateName;
-                        state.State = _state.State;
-                    }
-                    ticket.State = state;
+            //            state.Gid = _state.Gid;
+            //            state.StateName = _state.StateName;
+            //            state.State = _state.State;
+            //        }
+            //        ticket.State = state;
 
-                    Cluster cluster = new();
-                    if (a.task.Cluster != Guid.Empty)
-                    {
-                        var _cluster = _ClusterRepository.GetByGid(a.task.Cluster);
+            //        Cluster cluster = new();
+            //        if (a.task.Cluster != Guid.Empty)
+            //        {
+            //            var _cluster = _ClusterRepository.GetByGid(a.task.Cluster);
 
-                        cluster.Gid = _cluster.Gid;
-                        cluster.Name = _cluster.Name;
-                        cluster.Detail = _cluster.Detail;
-                    }
-                    ticket.Cluster = cluster;
+            //            cluster.Gid = _cluster.Gid;
+            //            cluster.Name = _cluster.Name;
+            //            cluster.Detail = _cluster.Detail;
+            //        }
+            //        ticket.Cluster = cluster;
 
-                    card.Task = ticket;
-                    return card;
-                })
-                .ToArray();
+            //        card.TaskTicket = ticket;
+            //        return card;
+            //    })
+            //    .ToArray();
+
             //var result = _TicketCardRepository
             //    .GetAll()
             //    .Join(TaskTicketController.GetTicketsFromServer(),

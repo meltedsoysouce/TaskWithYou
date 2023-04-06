@@ -1,12 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using DBKernel.Entity;
-using System.Text;
+using TaskWithYou.Shared.Model;
+using DBKernel.Queries;
 
 namespace DBKernel.Repositories
 {
     public interface ITaskTicketRepository : IRepositoryBase<TaskTicket>
     {
+        IEnumerable<TaskTicket> GetAllTask();
+
+        IEnumerable<TaskTicket> GetTodayTaskList();
+
         Task Add(Guid pGid,
                 int pTourokuBi,
                 string pName,
@@ -49,10 +52,21 @@ namespace DBKernel.Repositories
 
         public TaskTicket? GetByGid(Guid pGid)
         {
-            return _DbContext
-                .TaskTickets
-                .AsNoTracking()
-                .FirstOrDefault(a => a.Gid == pGid);
+            //return _DbContext
+            //    .TaskTickets
+            //    .AsNoTracking()
+            //    .FirstOrDefault(a => a.Gid == pGid);
+            return Queries.TaskTicketQuery.GetTaskByTaskOid(pGid);
+        }
+
+        public IEnumerable<TaskTicket> GetAllTask()
+        {
+            return Queries.TaskTicketQuery.GetAllTask();
+        }
+        
+        public IEnumerable<TaskTicket> GetTodayTaskList()
+        {
+            return Queries.TaskTicketQuery.GetTodayTaskList();
         }
 
         public async Task Edit(Guid pGid,
@@ -70,9 +84,9 @@ namespace DBKernel.Repositories
             task.TourokuBi = pTourokuBi;
             task.KigenBi = pKigenBi;
             task.Detail = pDetail;
-            task.TaskState = pTaskStateGid;
+            task.StateGid = pTaskStateGid;
             task.IsTodayTask = pIsTodayTask;
-            task.Cluster = pCluster;
+            task.ClusterGid = pCluster;
             
             await _DbContext.SaveChangesAsync();
         }
@@ -90,7 +104,7 @@ namespace DBKernel.Repositories
                     entity.TourokuBi = a.TourokuBi;
                     entity.KigenBi = a.KigenBi;
                     entity.Detail = a.Detail;
-                    entity.TaskState = a.TaskState;
+                    entity.State = a.State;
                     entity.IsTodayTask = a.IsTodayTask;
                     entity.Cluster = a.Cluster;
 
@@ -117,9 +131,9 @@ namespace DBKernel.Repositories
                 Name = pName,
                 KigenBi = pKigenBi,
                 Detail = pDetail,
-                TaskState = pTaskStateGid,
+                StateGid = pTaskStateGid,
                 IsTodayTask = pIsTodayTask,
-                Cluster = pCluster
+                ClusterGid = pCluster
             };
 
             TicketCard card = new()

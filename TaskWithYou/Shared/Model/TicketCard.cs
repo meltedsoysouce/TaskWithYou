@@ -14,6 +14,7 @@ namespace TaskWithYou.Shared.Model
 
         public float YCoordinate { get; set; }
         
-        public TaskTicket Task { get; set; }
+        public Guid TaskTicket { get; set; }
+        //public TaskTicket Task { get; set; }
     }
 }

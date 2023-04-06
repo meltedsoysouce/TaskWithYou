@@ -85,7 +85,7 @@ namespace TaskWithYou.Client.Pages.Content.Tasks
                 viewModel.SelectedState = new()
                 {
                     Gid = targetTask.State.Gid,
-                    Name = targetTask.State.StateName,
+                    Name = targetTask.State.Name,
                     State = targetTask.State.State
                 };
             }
@@ -101,7 +101,7 @@ namespace TaskWithYou.Client.Pages.Content.Tasks
                     return new ViewModel.StateItem()
                     {
                         Gid = a.Gid,
-                        Name = a.StateName,
+                        Name = a.Name,
                         State = a.State
                     };
                 })
@@ -177,7 +177,7 @@ namespace TaskWithYou.Client.Pages.Content.Tasks
                 var state = new TaskState()
                 {
                     Gid = viewModel.SelectedState.Gid,
-                    StateName = viewModel.SelectedState.Name,
+                    Name = viewModel.SelectedState.Name,
                     State = viewModel.SelectedState.State
                 };
                 ticket.State = state;

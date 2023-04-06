@@ -26,7 +26,7 @@ namespace TaskWithYou.Server.Controllers
                     return new TaskState()
                     {
                         Gid = a.Gid,
-                        StateName = a.StateName,
+                        Name = a.Name,
                         State = a.State
                     };
                 })
@@ -45,7 +45,7 @@ namespace TaskWithYou.Server.Controllers
             return new TaskState()
             {
                 Gid = state.Gid,
-                StateName = state.StateName,
+                Name = state.Name,
                 State = state.State
             };
         }
