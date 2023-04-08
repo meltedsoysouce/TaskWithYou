@@ -31,7 +31,7 @@ namespace TaskWithYou.Client.Pages.Content
             if (UpdateList.Count() > 0)
                 await UpdateTodayTask();
 
-            Task.Run(pModalOpenFunc);
+            await Task.Run(pModalOpenFunc);
         }
 
         private async void JumpToOtherPage(string pURL)

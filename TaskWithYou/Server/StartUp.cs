@@ -92,7 +92,8 @@ namespace TaskWithYou.Server
                         TourokuBi = 20000101,
                         KigenBi = 20000101,
                         ClusterGid = Guid.Empty,
-                        StateGid = state.Gid
+                        StateGid = state.Gid,
+                        CardGid = cardGid
                     };
 
                     TicketCard card = new()

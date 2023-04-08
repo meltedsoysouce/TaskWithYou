@@ -1,7 +1,6 @@
 ﻿@using TaskWithYou.Shared.Model;
 @using TaskWithYou.Client.Shared;
 
-<CustomValidator @ref="CustomValidator" />
 
 <BSModal @ref="BsModal" Size="Size.Large">
     <Header>タスクの作成</Header>
@@ -9,6 +8,7 @@
         @if (CanRender == true)
         {
             <BSForm Model="viewModel" OnValidSubmit="OnValidSubmitAsync">
+            <CustomValidator @ref="CustomValidator" />
                 <DataAnnotationsValidator />
                 <div class="mx-2">
                     <div class="row mx-2">

@@ -69,7 +69,8 @@ namespace TaskWithYou.Server.Controllers
         [HttpGet("{pGid}")]
         public async Task<ActionResult<TaskTicket?>> GetTask(Guid pGid)
         {
-            return new TaskTicket();
+            //return new TaskTicket();
+            return DBKernel.Queries.TaskTicketQuery.GetTaskByTaskOid(pGid);
             //var task = _TaskTicketRepository
             //    .GetByGid(pGid);
 

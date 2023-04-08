@@ -60,18 +60,6 @@ namespace TaskWithYou.Client.Pages.Content.Tasks
             }
             else
             {
-                //viewModel = new()
-                //{
-                //    Gid = targetTask.Gid,
-                //    Name = targetTask.Name,
-                //    IsTodayTask = targetTask.IsTodayTask,
-                //    TourokuBi = targetTask.TourokuBi,
-                //    StrTourokuBi = IntDateToString(targetTask.TourokuBi),
-                //    KigenBi = targetTask.KigenBi,
-                //    StrKigenBi = IntDateToString(targetTask.KigenBi),
-                //    Detail = targetTask.Detail,
-                //    Mode = EditMode.Edit
-                //};
                 viewModel.Gid = targetTask.Gid;
                 viewModel.Name = targetTask.Name;
                 viewModel.IsTodayTask = targetTask.IsTodayTask;
@@ -223,6 +211,11 @@ namespace TaskWithYou.Client.Pages.Content.Tasks
         private string IntDateToString(int pIntDate)
         {
             var _strdate = $"{pIntDate}";
+
+            // we must handle not dataformat string
+            if (_strdate.Length != 8)
+                return "";
+
             var year = _strdate.Substring(0, 4);
             var month = _strdate.Substring(4, 2);
             var day = _strdate.Substring(6, 2);
