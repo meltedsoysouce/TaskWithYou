@@ -25,7 +25,7 @@ builder.Services.AddScoped<ITicketCardRepository, TicketCardRepository>();
 StartUp.SetupDB();
 
 // Set TestData
-//StartUp.SetTestData();
+StartUp.SetTestData();
 
 var app = builder.Build();
 
