@@ -124,6 +124,7 @@ namespace DBKernel.Repositories
                 Guid pTaskStateGid,
                 Guid pCluster)
         {
+            var cardGid = Guid.NewGuid();
             TaskTicket entity = new()
             {
                 Gid = pGid,
@@ -133,19 +134,20 @@ namespace DBKernel.Repositories
                 Detail = pDetail,
                 StateGid = pTaskStateGid,
                 IsTodayTask = pIsTodayTask,
-                ClusterGid = pCluster
+                ClusterGid = pCluster,
+                CardGid = cardGid
             };
+            _DbContext.Add(entity);
 
             TicketCard card = new()
             {
-                Gid = Guid.NewGuid(),
+                Gid = cardGid,
                 TaskTicket = entity.Gid,
                 XCoordinate = 0,
                 YCoordinate = 0
             };
-
-            _DbContext.Add(entity);
             _DbContext.Add(card);
+
             await _DbContext.SaveChangesAsync();
         }
 
@@ -154,8 +156,12 @@ namespace DBKernel.Repositories
             var target = _DbContext
                 .TaskTickets
                 .First(a => a.Gid == pGid);
-
+            var card = _DbContext
+                .TicketCards
+                .First(a => a.Gid == target.CardGid);
             _DbContext.Remove(target);
+            _DbContext.Remove(card);
+
             await _DbContext.SaveChangesAsync();
         }
     }

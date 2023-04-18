@@ -5,6 +5,9 @@ using TaskWithYou.Shared.Model;
 using BlazorStrap.V5;
 using TaskWithYou.Shared;
 using TaskWithYou.Client.Shared;
+using System.Text.Json;
+using System.Text;
+using System.Security.AccessControl;
 
 namespace TaskWithYou.Client.Pages.Content.Tasks
 {
@@ -40,8 +43,7 @@ namespace TaskWithYou.Client.Pages.Content.Tasks
         /// Intialize ViewModel to add task.
         /// </summary>
         private async Task InitializeViewModelToAdd(EditMode pMode)
-        {
-            //viewModel = new() { Mode = EditMode.Add };
+        {            
             viewModel.Mode = EditMode.Add;
             viewModel.SelectedState = viewModel
                 .StateItems
@@ -106,6 +108,7 @@ namespace TaskWithYou.Client.Pages.Content.Tasks
         /// </summary>
         public async Task OnOpenAsync(Guid pGid ,EditMode pMode)
         {
+            viewModel = new();
             await InitializeStateItems();
             await InitializeClusterItems();
 
@@ -153,13 +156,15 @@ namespace TaskWithYou.Client.Pages.Content.Tasks
             var isCheckOk = InputCheck(out var errors);
             if (isCheckOk is true)
             {
-                var ticket = new TaskTicket()
+                TaskTicket ticket = new()
                 {
                     Gid = viewModel.Gid,
                     Name = viewModel.Name,
                     TourokuBi = viewModel.TourokuBi,
                     KigenBi = viewModel.KigenBi,
                     Detail = viewModel.Detail,
+                    StateGid = viewModel.SelectedState.Gid,
+                    ClusterGid = viewModel.SelectedCluster.Gid,
                 };
 
                 var state = new TaskState()
@@ -176,8 +181,8 @@ namespace TaskWithYou.Client.Pages.Content.Tasks
                     cluster = new Cluster()
                     {
                         Gid = viewModel.SelectedCluster.Gid,
-                        Name = viewModel.SelectedCluster.Name,
-                        Detail = viewModel.SelectedCluster.Detail,
+                        Name = viewModel.SelectedCluster.Name ?? "",
+                        Detail = viewModel.SelectedCluster.Detail ?? "",
                     };
                 }
                 ticket.Cluster = cluster;
@@ -186,6 +191,13 @@ namespace TaskWithYou.Client.Pages.Content.Tasks
                 {
                     case EditMode.Add:
                         await Http.PostAsJsonAsync("api/taskticket", ticket);
+                        //HttpRequestMessage request = new();
+                        //request.Method = HttpMethod.Post;
+                        //request.RequestUri = new Uri("https://localhost:7044/api/taskticket");
+                        //var serializedmodel = JsonSerializer.Serialize(ticket);
+                        //var content = new StringContent(serializedmodel, Encoding.UTF8, "application/json");
+                        //request.Content = content;
+                        //await Http.SendAsync(request);
                         break;
                     case EditMode.Edit:
                         await Http.PutAsJsonAsync("api/taskticket", ticket);
@@ -197,6 +209,7 @@ namespace TaskWithYou.Client.Pages.Content.Tasks
             else
             {
                 CustomValidator.DisplayError(errors);
+                return;
             }
 
             await BsModal.HideAsync();
@@ -227,12 +240,13 @@ namespace TaskWithYou.Client.Pages.Content.Tasks
         {
             errors = new();
 
-            if (viewModel.SelectedState is null)
+            if (viewModel.SelectedState == null)
             {
                 errors.Add("SelectedState", new() { "Stateがセットされていません。選択してください。" });
             }
 
-            return errors.Count() > 0;
+            var count = errors.Count() >= 0;
+            return errors.Count() >= 0;
         }
 
         /// <summary>
@@ -271,6 +285,8 @@ namespace TaskWithYou.Client.Pages.Content.Tasks
 
             public Cluster SelectedCluster { get; set; } = new();
             public Cluster[] ClusterItems { get; set; }
+
+            public TicketCard Card { get; private set; }
 
             internal class StateItem
             {
